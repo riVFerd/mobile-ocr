@@ -1,8 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-import 'image_preview_page.dart';
+import '../widgets/action_button.dart';
+import 'pick_image.dart';
 
+@Deprecated('Use [PickImagePage] instead for better performance')
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
 
@@ -14,10 +17,12 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late CameraController cameraController;
+  late ImagePicker imagePicker;
 
   Future<void> initializeCamera() async {
     final cameras = await availableCameras();
     cameraController = CameraController(cameras.first, ResolutionPreset.max);
+    imagePicker = ImagePicker();
     await cameraController.initialize();
   }
 
@@ -58,9 +63,19 @@ class _CameraPageState extends State<CameraPage> {
     cameraController.setFlashMode(FlashMode.off);
     setState(() {});
     Navigator.of(context).pushNamed(
-      ImagePreviewPage.routeName,
+      PickImagePage.routeName,
       arguments: imageFile.path,
     );
+  }
+
+  void browseGallery() async {
+    final imageFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (imageFile != null) {
+      Navigator.of(context).pushNamed(
+        PickImagePage.routeName,
+        arguments: imageFile.path,
+      );
+    }
   }
 
   @override
@@ -95,7 +110,7 @@ class _CameraPageState extends State<CameraPage> {
                     _CameraButtons(
                       onFlashToggle: toggleFlash,
                       onTakePicture: takePicture,
-                      onCameraSwitch: () {},
+                      onBrowseGallery: browseGallery,
                       getFlashIcon: getFlashIcon,
                     ),
                   ],
@@ -115,13 +130,13 @@ class _CameraPageState extends State<CameraPage> {
 class _CameraButtons extends StatefulWidget {
   final Future<void> Function() onFlashToggle;
   final void Function() onTakePicture;
-  final void Function() onCameraSwitch;
+  final void Function() onBrowseGallery;
   final IconData Function() getFlashIcon;
 
   const _CameraButtons({
     required this.onFlashToggle,
     required this.onTakePicture,
-    required this.onCameraSwitch,
+    required this.onBrowseGallery,
     required this.getFlashIcon,
   });
 
@@ -149,59 +164,11 @@ class _CameraButtonsState extends State<_CameraButtons> {
           iconData: Icons.camera_alt,
         ),
         ActionButton(
-          onClick: () async {
-            // TODO: Implement camera switching
-            // final cameras = await availableCameras();
-            // if (cameras.length > 1) {
-            //   if (cameraController.description == cameras.first) {
-            //     cameraController.setDescription(cameras.first);
-            //   } else {
-            //     cameraController.setDescription(cameras.last);
-            //   }
-            // }
-          },
+          onClick: widget.onBrowseGallery,
           iconSize: 24,
-          iconData: Icons.flip_camera_ios,
+          iconData: Icons.photo_library,
         ),
       ],
-    );
-  }
-}
-
-class ActionButton extends StatelessWidget {
-  final void Function() onClick;
-  final IconData iconData;
-  final double iconSize;
-  final Color? backgroundColor;
-  final Color? iconColor;
-
-  const ActionButton({
-    super.key,
-    required this.iconData,
-    required this.onClick,
-    required this.iconSize,
-    this.backgroundColor,
-    this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(50),
-      clipBehavior: Clip.hardEdge,
-      elevation: 16,
-      color: backgroundColor ?? Theme.of(context).colorScheme.primary,
-      child: InkWell(
-        onTap: onClick,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Icon(
-            iconData,
-            color: iconColor ?? Colors.white,
-            size: iconSize,
-          ),
-        ),
-      ),
     );
   }
 }
