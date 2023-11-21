@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_ocr/presentation/pages/pick_image.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,7 +17,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/cameraPage'),
+        onPressed: () => Navigator.pushNamed(context, PickImagePage.routeName),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
