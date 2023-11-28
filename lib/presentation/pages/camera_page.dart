@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/action_button.dart';
-import 'pick_image.dart';
+import 'pick_image_page.dart';
 
 @Deprecated('Use [PickImagePage] instead for better performance')
 class CameraPage extends StatefulWidget {

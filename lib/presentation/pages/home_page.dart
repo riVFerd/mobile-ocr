@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_ocr/presentation/pages/pick_image.dart';
+import 'package:mobile_ocr/presentation/pages/pick_image_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
