@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_ocr/logic/models/KTP.dart';
+import 'package:mobile_ocr/logic/models/KTM.dart';
 import 'package:mobile_ocr/presentation/pages/home_page.dart';
-import 'package:mobile_ocr/presentation/pages/review_page.dart';
+import 'package:mobile_ocr/presentation/pages/ktm_review_page.dart';
 
 import '../widgets/action_button.dart';
 
@@ -45,11 +45,11 @@ class _PickImagePageState extends State<PickImagePage> {
     setState(() {
       isLoading = true;
     });
-    final ktp = await KTP.getDataByUploadImage(imageFile!.path, '/ocr', dio);
-    if (ktp != null) {
+    final ktm = await KTM.getDataByUploadImage(imageFile!.path, '/ocr_ktm', dio);
+    if (ktm != null) {
       Navigator.of(context).pushNamed(
-        ReviewPage.routeName,
-        arguments: ktp,
+        KTMReviewPage.routeName,
+        arguments: ktm,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
